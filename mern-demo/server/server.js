@@ -102,31 +102,25 @@ app.post("/api/students", async (req, res) => {
 // Cập nhật sinh viên
 // ===============================
 
-app.put("/api/students/:id", async (req, res) => {
-    try {
-        const student = await Student.findByIdAndUpdate(
-            req.params.id,
-            req.body,
-            {
-                new: true,
-                runValidators: true
-            }
-        );
+// Cập nhật sinh viên (PUT)
+app.put('/api/students/:id', async (req, res) => {
+  try {
+    const updatedStudent = await Student.findByIdAndUpdate(req.params.id, req.body, { new: true })
+    res.json(updatedStudent)
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
 
-        if (!student) {
-            return res.status(404).json({
-                message: "Không tìm thấy sinh viên"
-            });
-        }
-
-        res.json(student);
-
-    } catch (error) {
-        res.status(400).json({
-            message: error.message
-        });
-    }
-});
+// Xóa sinh viên (DELETE)
+app.delete('/api/students/:id', async (req, res) => {
+  try {
+    await Student.findByIdAndDelete(req.params.id)
+    res.json({ message: 'Deleted successfully' })
+  } catch (err) {
+    res.status(400).json({ error: err.message })
+  }
+})
 
 
 // ===============================
